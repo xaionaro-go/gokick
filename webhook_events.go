@@ -45,11 +45,17 @@ type ChatMessageEmotesEvent struct {
 }
 
 type ChatMessageEvent struct {
-	MessageID   string                   `json:"message_id"`
+	MessageID string `json:"message_id"`
+	RepliesTo struct {
+		MessageID string    `json:"message_id"`
+		Sender    UserEvent `json:"sender"`
+		Content   string    `json:"content"`
+	} `json:"replies_to"`
 	Broadcaster UserEvent                `json:"broadcaster"`
 	Sender      UserEvent                `json:"sender"`
 	Content     string                   `json:"content"`
 	Emotes      []ChatMessageEmotesEvent `json:"emotes"`
+	CreatedAt   string                   `json:"created_at"`
 }
 
 type ChannelFollowEvent struct {
@@ -112,6 +118,19 @@ type ModerationBannedEvent struct {
 		CreatedAt string `json:"created_at"`
 		ExpiresAt string `json:"expires_at"`
 	} `json:"reason"`
+}
+
+type KicksGiftedEvent struct {
+	Broadcaster UserEvent `json:"broadcaster"`
+	Sender      UserEvent `json:"sender"`
+	Gift        struct {
+		Amount  int    `json:"amount"`
+		Name    string `json:"name"`
+		Type    string `json:"type"`
+		Tier    string `json:"tier"`
+		Message string `json:"message"`
+	} `json:"gift"`
+	CreatedAt string `json:"created_at"`
 }
 
 // I set it as public to be able to change it in tests.
@@ -298,5 +317,8 @@ var eventConstructors = map[SubscriptionName]map[string]eventConstructor{
 	},
 	SubscriptionNameModerationBanned: {
 		"1": func() interface{} { return new(ModerationBannedEvent) },
+	},
+	SubscriptionNameKicksGifted: {
+		"1": func() interface{} { return new(KicksGiftedEvent) },
 	},
 }

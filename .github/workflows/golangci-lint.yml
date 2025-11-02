@@ -1,9 +1,6 @@
 name: golangci-lint
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+
+on: [pull_request]
 
 permissions:
   contents: read
@@ -15,14 +12,14 @@ jobs:
     env:
       GOPRIVATE: github.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: stable
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.2.1
+          version: v2.5.0
           args: --timeout=10m
